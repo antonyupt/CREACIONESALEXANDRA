@@ -22,28 +22,28 @@
 
         <nav class="mt-5">
 
-            <a href="#" class="block px-5 py-3 hover:bg-slate-800">
+            <a href="/" class="block px-5 py-3 hover:bg-slate-800">
                 Dashboard
             </a>
 
-            <a href="#" class="block px-5 py-3 hover:bg-slate-800">
+            <a href="/productos" class="block px-5 py-3 hover:bg-slate-800">
                 Productos
             </a>
 
-            <a href="/productos" class="block px-5 py-3 hover:bg-slate-800">
+            <a href="/produccion" class="block px-5 py-3 hover:bg-slate-800">
                 Producción
             </a>
 
-            <a href="#" class="block px-5 py-3 hover:bg-slate-800">
+            <a href="/inventario" class="block px-5 py-3 hover:bg-slate-800">
                 Inventario
             </a>
 
-            <a href="/clientes"
-   class="block px-5 py-3 hover:bg-slate-800">
-    Clientes
-</a>
+            <a href="/clientes" class="block px-5 py-3 hover:bg-slate-800">
+                Clientes
+            </a>
 
-            <a href="#" class="block px-5 py-3 hover:bg-slate-800">
+            <a href="{{ route('ventas.index') }}"
+               class="block px-5 py-3 hover:bg-slate-800">
                 Ventas
             </a>
 
@@ -76,6 +76,20 @@
 
         <div class="p-6">
 
+            {{-- Mensajes de éxito --}}
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Mensajes de error --}}
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @yield('content')
 
         </div>
@@ -83,6 +97,7 @@
     </main>
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@stack('scripts')
 </body>
 </html>

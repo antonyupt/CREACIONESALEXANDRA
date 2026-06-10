@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-          Schema::create('ventas', function (Blueprint $table) {
+         Schema::create('produccions', function (Blueprint $table) {
 
         $table->id();
 
-        $table->foreignId('cliente_id')
-              ->constrained('clientes')
-              ->onDelete('cascade');
+        $table->foreignId('producto_id')
+            ->constrained('productos')
+            ->onDelete('cascade');
 
-        $table->date('fecha');
+        $table->integer('cantidad');
 
-        $table->decimal('total',10,2);
+        $table->date('fecha_inicio');
+
+        $table->date('fecha_fin')->nullable();
 
         $table->string('estado')
-              ->default('Pendiente');
+            ->default('Pendiente');
 
         $table->timestamps();
     });
@@ -35,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ventas');
+        Schema::dropIfExists('produccions');
     }
 };

@@ -56,6 +56,11 @@
                 name="stock"
                 placeholder="Stock"
                 class="border p-2 rounded">
+            
+            <input
+                type="file"
+                name="imagen"
+                class="border p-2 rounded w-full">
 
         </div>
 

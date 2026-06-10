@@ -17,12 +17,6 @@
 
             <input
                 type="text"
-                name="tipo_documento"
-                value="{{ $cliente->tipo_documento }}"
-                class="border p-2 rounded">
-
-            <input
-                type="text"
                 name="numero_documento"
                 value="{{ $cliente->numero_documento }}"
                 class="border p-2 rounded">

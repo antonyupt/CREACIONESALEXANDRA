@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
-use Illuminate\Support\Facades\Http;
 
 class ClienteController extends Controller
 {
@@ -22,10 +21,11 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        Cliente::create([
+        $numeroDocumento = trim($request->numero_documento);
 
-            'tipo_documento' => $request->tipo_documento,
-            'numero_documento' => $request->numero_documento,
+        Cliente::create([
+            'tipo_documento' => $this->tipoDocumentoDesdeNumero($numeroDocumento),
+            'numero_documento' => $numeroDocumento,
             'nombre' => $request->nombre,
             'telefono' => $request->telefono,
             'correo' => $request->correo,
@@ -52,10 +52,11 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
 
-        $cliente->update([
+        $numeroDocumento = trim($request->numero_documento);
 
-            'tipo_documento' => $request->tipo_documento,
-            'numero_documento' => $request->numero_documento,
+        $cliente->update([
+            'tipo_documento' => $this->tipoDocumentoDesdeNumero($numeroDocumento),
+            'numero_documento' => $numeroDocumento,
             'nombre' => $request->nombre,
             'telefono' => $request->telefono,
             'correo' => $request->correo,
@@ -74,34 +75,19 @@ class ClienteController extends Controller
 
         return redirect()->route('clientes.index');
     }
-public function buscarDocumento(Request $request)
-{
-     dd('ENTRO AL CONTROLADOR');
-    /*$tipo = $request->tipo_documento;
-    $numero = $request->numero_documento;
 
-    $token = env('APIS_PERU_TOKEN');
+    private function tipoDocumentoDesdeNumero(string $numeroDocumento): string
+    {
+        $longitud = strlen($numeroDocumento);
 
-    if ($tipo == 'DNI') {
+        if ($longitud === 8) {
+            return 'DNI';
+        }
 
-        $url = "https://dniruc.apisperu.com/api/v1/dni/{$numero}?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFudG9ueWNoYXRhY2hvcXVlQGdtYWlsLmNvbSJ9._83lRwXjMZGsdccRAXiJwH_6e-_gPmzr_bTgQREUy2o";
+        if ($longitud === 11) {
+            return 'RUC';
+        }
 
-    } else {
-
-        $url = "https://dniruc.apisperu.com/api/v1/ruc/{$numero}?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFudG9ueWNoYXRhY2hvcXVlQGdtYWlsLmNvbSJ9._83lRwXjMZGsdccRAXiJwH_6e-_gPmzr_bTgQREUy2o";
-
+        return 'DOCUMENTO';
     }
-
-    $response = Http::get($url);
-
-    dd(
-        $url,
-        $response->status(),
-        $response->json()
-    );*/ 
-  
-
-   
-
-}
 }
