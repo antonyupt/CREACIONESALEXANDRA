@@ -2,76 +2,195 @@
 
 @section('content')
 
-<div class="bg-white p-6 rounded-lg shadow">
+<div class="max-w-7xl mx-auto">
 
-    <h2 class="text-2xl font-bold mb-5">
-        Nuevo Producto
-    </h2>
+    <!-- CABECERA -->
+    <div class="flex justify-between items-center mb-8">
 
-    <form action="{{ route('productos.store') }}" method="POST">
+        <div>
 
-        @csrf
+            <h1 class="text-3xl font-bold text-slate-800">
+                Nuevo Producto
+            </h1>
 
-        <div class="grid grid-cols-2 gap-4">
-
-            <input
-                type="text"
-                name="codigo"
-                placeholder="Código"
-                class="border p-2 rounded">
-
-            <input
-                type="text"
-                name="nombre"
-                placeholder="Nombre"
-                class="border p-2 rounded">
-
-            <input
-                type="text"
-                name="categoria"
-                placeholder="Categoría"
-                class="border p-2 rounded">
-
-            <input
-                type="text"
-                name="talla"
-                placeholder="Talla"
-                class="border p-2 rounded">
-
-            <input
-                type="text"
-                name="color"
-                placeholder="Color"
-                class="border p-2 rounded">
-
-            <input
-                type="number"
-                step="0.01"
-                name="precio"
-                placeholder="Precio"
-                class="border p-2 rounded">
-
-            <input
-                type="number"
-                name="stock"
-                placeholder="Stock"
-                class="border p-2 rounded">
-            
-            <input
-                type="file"
-                name="imagen"
-                class="border p-2 rounded w-full">
+            <p class="text-gray-500 mt-1">
+                Registra un nuevo producto en el sistema
+            </p>
 
         </div>
 
-        <button
-            class="bg-green-600 text-white px-5 py-2 rounded mt-5">
+        <a href="{{ route('productos.index') }}"
+           class="bg-gray-200 hover:bg-gray-300 px-5 py-3 rounded-xl">
 
-            Guardar Producto
+            ← Volver
 
-        </button>
+        </a>
 
-    </form>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+
+        <form action="{{ route('productos.store') }}"
+              method="POST"
+              enctype="multipart/form-data">
+
+            @csrf
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <!-- CODIGO -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Código
+                    </label>
+
+                    <input
+                        type="text"
+                        name="codigo"
+                        placeholder="Ejemplo: P001"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+                </div>
+
+                <!-- NOMBRE -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Nombre
+                    </label>
+
+                    <input
+                        type="text"
+                        name="nombre"
+                        placeholder="Nombre del producto"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+                </div>
+
+                <!-- CATEGORIA -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Categoría
+                    </label>
+
+                    <input
+                        type="text"
+                        name="categoria"
+                        placeholder="Polos, Casacas..."
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+                </div>
+
+                <!-- TALLA -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Talla
+                    </label>
+
+                    <select
+                        name="talla"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                        <option value="">Seleccionar talla</option>
+                        <option>S</option>
+                        <option>M</option>
+                        <option>L</option>
+                        <option>XL</option>
+                        <option>XXL</option>
+
+                    </select>
+
+                </div>
+
+                <!-- COLOR -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Color
+                    </label>
+
+                    <input
+                        type="text"
+                        name="color"
+                        placeholder="Color"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                </div>
+
+                <!-- PRECIO -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Precio
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="precio"
+                        placeholder="0.00"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                </div>
+
+                <!-- STOCK -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Stock Inicial
+                    </label>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        placeholder="0"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                </div>
+
+                <!-- IMAGEN -->
+                <div>
+
+                    <label class="block mb-2 font-semibold text-gray-700">
+                        Imagen
+                    </label>
+
+                    <input
+                        type="file"
+                        name="imagen"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3">
+
+                </div>
+
+            </div>
+
+            <!-- BOTONES -->
+            <div class="flex gap-4 mt-8">
+
+                <button
+                    type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl shadow">
+
+                    💾 Guardar Producto
+
+                </button>
+
+                <a href="{{ route('productos.index') }}"
+                   class="bg-gray-200 hover:bg-gray-300 px-8 py-3 rounded-xl">
+
+                    Cancelar
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 

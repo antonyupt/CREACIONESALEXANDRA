@@ -2,189 +2,257 @@
 
 @section('content')
 
-<div class="bg-white p-6 rounded shadow">
+<div class="max-w-7xl mx-auto">
 
-    <h2 class="text-2xl font-bold mb-5">
-        Inventario
-    </h2>
+    <!-- CABECERA -->
+    <div class="mb-8">
 
-    {{-- Resumen Inventario --}}
-    <div class="grid grid-cols-3 gap-4 mb-5">
+        <h1 class="text-3xl font-bold text-slate-800">
+            Inventario
+        </h1>
 
-        <div class="bg-blue-100 p-4 rounded shadow">
-
-            <h3 class="font-bold text-lg">
-                Productos
-            </h3>
-
-            <p class="text-2xl font-bold">
-                {{ $productos->count() }}
-            </p>
-
-        </div>
-
-        <div class="bg-green-100 p-4 rounded shadow">
-
-            <h3 class="font-bold text-lg">
-                Stock Total
-            </h3>
-
-            <p class="text-2xl font-bold">
-                {{ $productos->sum('stock') }}
-            </p>
-
-        </div>
-
-        <div class="bg-red-100 p-4 rounded shadow">
-
-            <h3 class="font-bold text-lg">
-                Stock Crítico
-            </h3>
-
-            <p class="text-2xl font-bold">
-                {{ $productos->where('stock','<=',5)->count() }}
-            </p>
-
-        </div>
+        <p class="text-gray-500 mt-1">
+            Control de stock y productos disponibles
+        </p>
 
     </div>
-
-    {{-- Alerta General --}}
 
     @php
         $productosCriticos = $productos->where('stock','<=',5);
     @endphp
 
-    @if($productosCriticos->count() > 0)
+    <!-- TARJETAS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
+        <div class="bg-white rounded-2xl shadow-md p-6">
 
-            ⚠ Atención:
+            <div class="text-4xl mb-3">
+                📦
+            </div>
 
-            Existen
+            <p class="text-gray-500">
+                Productos Registrados
+            </p>
 
-            <strong>
-                {{ $productosCriticos->count() }}
-            </strong>
-
-            productos con stock crítico.
+            <h2 class="text-4xl font-bold text-blue-600 mt-2">
+                {{ $productos->count() }}
+            </h2>
 
         </div>
 
+        <div class="bg-white rounded-2xl shadow-md p-6">
+
+            <div class="text-4xl mb-3">
+                📊
+            </div>
+
+            <p class="text-gray-500">
+                Stock Total
+            </p>
+
+            <h2 class="text-4xl font-bold text-green-600 mt-2">
+                {{ $productos->sum('stock') }}
+            </h2>
+
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6">
+
+            <div class="text-4xl mb-3">
+                ⚠️
+            </div>
+
+            <p class="text-gray-500">
+                Stock Crítico
+            </p>
+
+            <h2 class="text-4xl font-bold text-red-600 mt-2">
+                {{ $productosCriticos->count() }}
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- ALERTA -->
+    @if($productosCriticos->count() > 0)
+
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+
+        <div class="flex items-center gap-3">
+
+            <span class="text-red-600 text-xl">
+                ⚠️
+            </span>
+
+            <span class="text-red-700 font-medium">
+
+                Existen
+
+                <strong>
+                    {{ $productosCriticos->count() }}
+                </strong>
+
+                productos con stock crítico.
+
+            </span>
+
+        </div>
+
+    </div>
+
     @endif
 
-    {{-- Tabla Inventario --}}
+    <!-- TABLA -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-    <table class="w-full border border-gray-300">
+        <div class="p-6 border-b">
 
-        <thead>
+            <h2 class="text-xl font-bold">
+                Stock de Productos
+            </h2>
 
-            <tr class="bg-gray-100">
+        </div>
 
-                <th class="border p-2">
-                    Código
-                </th>
+        <div class="overflow-x-auto">
 
-                <th class="border p-2">
-                    Producto
-                </th>
+            <table class="w-full">
 
-                <th class="border p-2">
-                    Categoría
-                </th>
+                <thead class="bg-slate-100">
 
-                <th class="border p-2">
-                    Precio
-                </th>
+                    <tr>
 
-                <th class="border p-2">
-                    Stock
-                </th>
+                        <th class="p-4 text-left">
+                            Código
+                        </th>
 
-            </tr>
+                        <th class="p-4 text-left">
+                            Producto
+                        </th>
 
-        </thead>
+                        <th class="p-4 text-left">
+                            Categoría
+                        </th>
 
-        <tbody>
+                        <th class="p-4 text-center">
+                            Precio
+                        </th>
 
-            @forelse($productos as $producto)
+                        <th class="p-4 text-center">
+                            Stock
+                        </th>
 
-                <tr>
+                    </tr>
 
-                    <td class="border p-2">
-                        {{ $producto->codigo }}
-                    </td>
+                </thead>
 
-                    <td class="border p-2">
-                        {{ $producto->nombre }}
-                    </td>
+                <tbody>
 
-                    <td class="border p-2">
-                        {{ $producto->categoria }}
-                    </td>
+                    @forelse($productos as $producto)
 
-                    <td class="border p-2">
-                        S/ {{ number_format($producto->precio,2) }}
-                    </td>
+                    <tr class="border-b hover:bg-slate-50 transition">
 
-                    <td class="border p-2 text-center">
+                        <td class="p-4 font-medium text-slate-700">
+                            {{ $producto->codigo }}
+                        </td>
 
-                        @if($producto->stock == 0)
+                        <td class="p-4">
 
-                            <span class="bg-red-600 text-white px-3 py-1 rounded font-bold">
+                            <div class="flex items-center gap-3">
 
-                                AGOTADO
+                                @if($producto->imagen)
 
-                            </span>
+                                    <img
+                                        src="{{ asset('storage/'.$producto->imagen) }}"
+                                        class="w-12 h-12 rounded-lg object-cover">
 
-                        @elseif($producto->stock <= 5)
+                                @else
 
-                            <span class="bg-red-200 text-red-700 px-3 py-1 rounded font-bold">
+                                   
+                                @endif
 
-                                {{ $producto->stock }} - CRÍTICO
+                                <span class="font-semibold">
 
-                            </span>
+                                    {{ $producto->nombre }}
 
-                        @elseif($producto->stock <= 10)
+                                </span>
 
-                            <span class="bg-yellow-200 text-yellow-700 px-3 py-1 rounded font-bold">
+                            </div>
 
-                                {{ $producto->stock }} - BAJO
+                        </td>
 
-                            </span>
+                        <td class="p-4">
+                            {{ $producto->categoria }}
+                        </td>
 
-                        @else
+                        <td class="p-4 text-center font-semibold text-green-600">
 
-                            <span class="bg-green-200 text-green-700 px-3 py-1 rounded font-bold">
+                            S/ {{ number_format($producto->precio,2) }}
 
-                                {{ $producto->stock }}
+                        </td>
 
-                            </span>
+                        <td class="p-4 text-center">
 
-                        @endif
+                            @if($producto->stock == 0)
 
-                    </td>
+                                <span class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">
 
-                </tr>
+                                    Agotado
 
-            @empty
+                                </span>
 
-                <tr>
+                            @elseif($producto->stock <= 5)
 
-                    <td colspan="5"
-                        class="border p-4 text-center">
+                                <span class="bg-red-100 text-red-700 px-4 py-2 rounded-full text-sm font-bold">
 
-                        No existen productos registrados.
+                                    {{ $producto->stock }} - Crítico
 
-                    </td>
+                                </span>
 
-                </tr>
+                            @elseif($producto->stock <= 10)
 
-            @endforelse
+                                <span class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full text-sm font-bold">
 
-        </tbody>
+                                    {{ $producto->stock }} - Bajo
 
-    </table>
+                                </span>
+
+                            @else
+
+                                <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-bold">
+
+                                    {{ $producto->stock }}
+
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="p-10 text-center text-gray-500">
+
+                            No existen productos registrados.
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

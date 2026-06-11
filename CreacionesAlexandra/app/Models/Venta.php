@@ -21,4 +21,8 @@ public function detalles()
 {
     return $this->hasMany(DetalleVenta::class);
 }
+public function producciones()
+{
+    return $this->hasMany(Produccion::class);
+}
 }

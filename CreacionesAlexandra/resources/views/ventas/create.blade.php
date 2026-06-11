@@ -2,130 +2,212 @@
 
 @section('content')
 
-<div class="bg-white p-6 rounded shadow">
+<div class="max-w-7xl mx-auto">
 
-    <h2 class="text-2xl font-bold mb-5">
-        Nueva Venta
-    </h2>
+    <div class="mb-8">
+
+        <h1 class="text-3xl font-bold text-slate-800">
+            Nueva Venta
+        </h1>
+
+        <p class="text-gray-500 mt-1">
+            Registro de ventas y generación de pedidos
+        </p>
+
+    </div>
 
     <form action="{{ route('ventas.store') }}" method="POST">
 
         @csrf
 
-        <div class="grid grid-cols-2 gap-4 mb-5">
+        <!-- DATOS GENERALES -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
 
-            <div>
-                <label class="block mb-1">
-                    Cliente
-                </label>
+            <h2 class="text-lg font-bold mb-5">
+                Información General
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-5">
+
+                <div>
+
+                    <label class="block mb-2 text-sm font-semibold text-gray-700">
+                        Cliente
+                    </label>
+
+                    <select
+                        name="cliente_id"
+                        id="cliente_id"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+                        <option value="">
+                            Seleccione un cliente
+                        </option>
+
+                        @foreach($clientes as $cliente)
+
+                            <option value="{{ $cliente->id }}">
+                                {{ $cliente->nombre }}
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label class="block mb-2 text-sm font-semibold text-gray-700">
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        name="fecha"
+                        value="{{ date('Y-m-d') }}"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- AGREGAR PRODUCTOS -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+
+            <h2 class="text-lg font-bold mb-5">
+                Agregar Productos
+            </h2>
+
+            <div class="grid md:grid-cols-3 gap-4">
 
                 <select
-                    name="cliente_id"
-                    id="cliente_id"
-                    class="border p-2 rounded w-full">
+                    id="producto"
+                    class="border border-gray-300 rounded-xl px-4 py-3">
 
                     <option value="">
-                        Seleccione un cliente
+                        Seleccione producto
                     </option>
 
-                    @foreach($clientes as $cliente)
+                    @foreach($productos as $producto)
 
-                        <option value="{{ $cliente->id }}">
-                            {{ $cliente->nombre }}
+                        <option
+                            value="{{ $producto->id }}"
+                            data-precio="{{ $producto->precio }}">
+
+                            {{ $producto->nombre }}
+
                         </option>
 
                     @endforeach
 
                 </select>
 
-            </div>
-
-            <div>
-                <label class="block mb-1">
-                    Fecha
-                </label>
-
                 <input
-                    type="date"
-                    name="fecha"
-                    id="fecha"
-                    value="{{ date('Y-m-d') }}"
-                    class="border p-2 rounded w-full">
+                    type="number"
+                    id="cantidad"
+                    min="1"
+                    placeholder="Cantidad"
+                    class="border border-gray-300 rounded-xl px-4 py-3">
+
+                <button
+                    type="button"
+                    id="btnAgregar"
+                    class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold">
+
+                    + Agregar Producto
+
+                </button>
+
             </div>
 
         </div>
 
-        <hr class="my-5">
+        <!-- DETALLE -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-        <div class="grid grid-cols-3 gap-4">
+            <div class="p-6 border-b">
 
-            <select
-                id="producto"
-                class="border p-2 rounded">
+                <h2 class="text-lg font-bold">
+                    Detalle de Venta
+                </h2>
 
-                <option value="">
-                    Seleccione producto
-                </option>
+            </div>
 
-                @foreach($productos as $producto)
+            <div class="overflow-x-auto">
 
-                    <option
-                        value="{{ $producto->id }}"
-                        data-precio="{{ $producto->precio }}">
+                <table class="w-full">
 
-                        {{ $producto->nombre }}
+                    <thead class="bg-slate-100">
 
-                    </option>
+                        <tr>
 
-                @endforeach
+                            <th class="p-4 text-left">
+                                Producto
+                            </th>
 
-            </select>
+                            <th class="p-4 text-center">
+                                Cantidad
+                            </th>
 
-            <input
-                type="number"
-                id="cantidad"
-                placeholder="Cantidad"
-                min="1"
-                class="border p-2 rounded">
+                            <th class="p-4 text-center">
+                                Precio
+                            </th>
 
-            <button
-                type="button"
-                id="btnAgregar"
-                class="bg-blue-600 text-white rounded">
+                            <th class="p-4 text-center">
+                                Subtotal
+                            </th>
 
-                Agregar
+                            <th class="p-4 text-center">
+                                Acción
+                            </th>
 
-            </button>
+                        </tr>
 
-        </div>
+                    </thead>
 
-        <table class="w-full mt-5 border">
+                    <tbody id="detalleVenta">
 
-            <thead>
+                        <tr id="sinProductos">
 
-                <tr class="bg-gray-100">
+                            <td colspan="5"
+                                class="text-center p-8 text-gray-400">
 
-                    <th class="border p-2">Producto</th>
-                    <th class="border p-2">Cantidad</th>
-                    <th class="border p-2">Precio</th>
-                    <th class="border p-2">Subtotal</th>
+                                No hay productos agregados
 
-                </tr>
+                            </td>
 
-            </thead>
+                        </tr>
 
-            <tbody id="detalleVenta">
+                    </tbody>
 
-            </tbody>
+                </table>
 
-        </table>
+            </div>
 
-        <div class="text-right mt-5">
+            <div class="bg-slate-50 p-6 flex justify-between items-center">
 
-            <h3 class="text-xl font-bold">
-                Total: S/
-                <span id="totalVenta">0.00</span>
-            </h3>
+                <div>
+
+                    <span class="text-gray-500">
+                        Total de la venta
+                    </span>
+
+                </div>
+
+                <div>
+
+                    <span class="text-3xl font-bold text-green-600">
+
+                        S/ <span id="totalVenta">0.00</span>
+
+                    </span>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -141,7 +223,7 @@
 
         <button
             type="submit"
-            class="bg-green-600 text-white px-5 py-2 rounded mt-5">
+            class="mt-6 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl shadow-lg font-semibold">
 
             Guardar Venta
 
@@ -156,56 +238,116 @@
 let productosVenta = [];
 let total = 0;
 
-document.getElementById('btnAgregar').addEventListener('click', () => {
+function actualizarTabla()
+{
+    let tbody = document.getElementById('detalleVenta');
+
+    if(productosVenta.length === 0)
+    {
+        tbody.innerHTML = `
+            <tr id="sinProductos">
+                <td colspan="5" class="text-center p-8 text-gray-400">
+                    No hay productos agregados
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    productosVenta.forEach((item,index)=>{
+
+        tbody.innerHTML += `
+        <tr class="border-b hover:bg-slate-50">
+
+            <td class="p-4">${item.nombre}</td>
+
+            <td class="p-4 text-center">
+                ${item.cantidad}
+            </td>
+
+            <td class="p-4 text-center">
+                S/ ${item.precio.toFixed(2)}
+            </td>
+
+            <td class="p-4 text-center">
+                S/ ${item.subtotal.toFixed(2)}
+            </td>
+
+            <td class="p-4 text-center">
+
+                <button
+                    type="button"
+                    onclick="eliminarProducto(${index})"
+                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg">
+
+                    Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+    });
+}
+
+function eliminarProducto(index)
+{
+    total -= productosVenta[index].subtotal;
+
+    productosVenta.splice(index,1);
+
+    document.getElementById('totalVenta').innerText =
+        total.toFixed(2);
+
+    document.getElementById('productosInput').value =
+        JSON.stringify(productosVenta);
+
+    document.getElementById('totalInput').value =
+        total.toFixed(2);
+
+    actualizarTabla();
+}
+
+document.getElementById('btnAgregar').addEventListener('click',()=>{
 
     let producto = document.getElementById('producto');
-    let cantidad = document.getElementById('cantidad').value;
+    let cantidad = parseInt(
+        document.getElementById('cantidad').value
+    );
 
-    if (!producto.value || !cantidad) {
-
+    if(!producto.value || !cantidad)
+    {
         alert('Seleccione producto y cantidad');
         return;
     }
 
     let nombre =
-        producto.options[producto.selectedIndex].text;
+        producto.options[
+            producto.selectedIndex
+        ].text;
 
     let precio =
         parseFloat(
-            producto.options[producto.selectedIndex]
-            .dataset.precio
+            producto.options[
+                producto.selectedIndex
+            ].dataset.precio
         );
 
     let subtotal = precio * cantidad;
 
     productosVenta.push({
 
-        producto_id: producto.value,
-        cantidad: cantidad,
-        precio: precio,
-        subtotal: subtotal
+        producto_id : producto.value,
+        nombre : nombre,
+        cantidad : cantidad,
+        precio : precio,
+        subtotal : subtotal
 
     });
-
-    document.getElementById('detalleVenta').innerHTML += `
-
-        <tr>
-
-            <td class="border p-2">${nombre}</td>
-
-            <td class="border p-2">${cantidad}</td>
-
-            <td class="border p-2">
-                S/ ${precio.toFixed(2)}
-            </td>
-
-            <td class="border p-2">
-                S/ ${subtotal.toFixed(2)}
-            </td>
-
-        </tr>
-
-    `;
 
     total += subtotal;
 
@@ -218,8 +360,9 @@ document.getElementById('btnAgregar').addEventListener('click', () => {
     document.getElementById('totalInput').value =
         total.toFixed(2);
 
-    document.getElementById('cantidad').value = '';
+    actualizarTabla();
 
+    document.getElementById('cantidad').value = '';
 });
 
 </script>

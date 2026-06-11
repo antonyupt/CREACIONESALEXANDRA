@@ -2,127 +2,191 @@
 
 @section('content')
 
-<div class="bg-white p-6 rounded shadow">
+<div class="max-w-7xl mx-auto">
 
-    <div class="flex justify-between mb-5">
+    <!-- CABECERA -->
+    <div class="flex justify-between items-center mb-8">
 
-        <h2 class="text-2xl font-bold">
-            Producción
-        </h2>
+        <div>
+
+            <h1 class="text-3xl font-bold text-slate-800">
+                Producción
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Control y seguimiento de órdenes de producción
+            </p>
+
+        </div>
 
         <a href="{{ route('produccion.create') }}"
-           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow-lg transition">
 
-            Nueva Producción
+            + Nueva Producción
 
         </a>
 
     </div>
 
-    <table class="w-full border">
+    <!-- TARJETAS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
 
-        <thead>
+    <div class="bg-white rounded-2xl shadow-md p-6">
+        <p class="text-gray-500">Total Producciones</p>
+        <h2 class="text-4xl font-bold text-blue-600 mt-2">
+            {{ $producciones->count() }}
+        </h2>
+    </div>
 
-            <tr class="bg-gray-100">
+    <div class="bg-white rounded-2xl shadow-md p-6">
+        <p class="text-gray-500">Pendientes</p>
+        <h2 class="text-4xl font-bold text-red-500 mt-2">
+            {{ $producciones->where('estado','Pendiente')->count() }}
+        </h2>
+    </div>
 
-                <th class="border p-2">Producto</th>
-                <th class="border p-2">Cantidad</th>
-                <th class="border p-2">Inicio</th>
-                <th class="border p-2">Fin</th>
-                <th class="border p-2">Estado</th>
-                <th class="border p-2">Acciones</th>
+    <div class="bg-white rounded-2xl shadow-md p-6">
+        <p class="text-gray-500">En Producción</p>
+        <h2 class="text-4xl font-bold text-yellow-500 mt-2">
+            {{ $producciones->where('estado','En Producción')->count() }}
+        </h2>
+    </div>
 
-            </tr>
+    <div class="bg-white rounded-2xl shadow-md p-6">
+        <p class="text-gray-500">Terminadas</p>
+        <h2 class="text-4xl font-bold text-green-600 mt-2">
+            {{ $producciones->where('estado','Terminado')->count() }}
+        </h2>
+    </div>
 
-        </thead>
+</div>
 
-        <tbody>
+    <!-- TABLA -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-            @forelse($producciones as $p)
+        <div class="p-6 border-b">
 
-                <tr>
+            <h2 class="text-xl font-bold">
+                Órdenes de Producción
+            </h2>
 
-                    <td class="border p-2">
-                        {{ $p->producto->nombre }}
-                    </td>
+        </div>
 
-                    <td class="border p-2 text-center">
-                        {{ $p->cantidad }}
-                    </td>
+        <div class="overflow-x-auto">
 
-                    <td class="border p-2 text-center">
-                        {{ $p->fecha_inicio }}
-                    </td>
+            <table class="w-full">
 
-                    <td class="border p-2 text-center">
-                        {{ $p->fecha_fin ?? '-' }}
-                    </td>
+                <thead class="bg-slate-100">
 
-                    <td class="border p-2 text-center">
+                    <tr>
 
-                        @if($p->estado == 'Pendiente')
+                        <th class="p-4 text-left">
+                            Producto
+                        </th>
 
-                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold">
-                                🔴 Pendiente
-                            </span>
+                        <th class="p-4 text-center">
+                            Cantidad
+                        </th>
 
-                        @elseif($p->estado == 'En Producción')
+                        <th class="p-4 text-center">
+                            Inicio
+                        </th>
 
-                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">
-                                🟡 En Producción
-                            </span>
+                        <th class="p-4 text-center">
+                            Fin
+                        </th>
 
-                        @elseif($p->estado == 'Terminado')
+                        <th class="p-4 text-center">
+                            Estado
+                        </th>
 
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
-                                🟢 Terminado
-                            </span>
+                       
+                    </tr>
 
-                        @endif
+                </thead>
 
-                    </td>
+                <tbody>
 
-                    <td class="border p-2 text-center">
+                    @forelse($producciones as $p)
 
-                        @if($p->estado != 'Terminado')
+                    <tr class="border-b hover:bg-slate-50 transition">
 
-                            <a href="{{ route('produccion.terminar', $p->id) }}"
-                               class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+                        <td class="p-4">
 
-                                Finalizar
+                            <div class="font-semibold">
+                                {{ $p->producto->nombre }}
+                            </div>
 
-                            </a>
+                        </td>
 
-                        @else
+                        <td class="p-4 text-center font-semibold">
+                            {{ $p->cantidad }}
+                        </td>
 
-                            <span class="text-green-600 font-bold">
-                                ✓ Completado
-                            </span>
+                        <td class="p-4 text-center">
+                            {{ $p->fecha_inicio }}
+                        </td>
 
-                        @endif
+                        <td class="p-4 text-center">
+                            {{ $p->fecha_fin ?? '-' }}
+                        </td>
 
-                    </td>
+                    <td class="p-4 text-center">
 
-                </tr>
+    @if($p->estado == 'Pendiente')
 
-            @empty
+        <a href="{{ route('produccion.iniciar', $p->id) }}"
+           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow transition">
 
-                <tr>
+            Iniciar
 
-                    <td colspan="6"
-                        class="border p-4 text-center text-gray-500">
+        </a>
 
-                        No existen producciones registradas.
+    @elseif($p->estado == 'En Producción')
 
-                    </td>
+        <a href="{{ route('produccion.terminar', $p->id) }}"
+           class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow transition">
 
-                </tr>
+            Finalizar
 
-            @endforelse
+        </a>
 
-        </tbody>
+    @else
 
-    </table>
+        <span class="text-green-600 font-bold">
+            ✓ Completado
+        </span>
+
+    @endif
+
+</td>
+
+                     
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="p-10 text-center text-gray-500">
+
+                            No existen producciones registradas.
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 
